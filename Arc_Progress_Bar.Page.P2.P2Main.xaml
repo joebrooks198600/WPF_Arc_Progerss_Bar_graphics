@@ -1,0 +1,377 @@
+Arc_Progress_Bar<UserControl x:Class="Arc_Progress_Bar.Page.P2.P2Main"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Arc_Progress_Bar.Page.P2" xmlns:th="clr-namespace:Arc_Progress_Bar.Themes"
+             xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             mc:Ignorable="d">
+    <Viewbox>
+        <Grid Width="1180" Height="964" Background="#FF1F1F1F" >
+            <Grid Margin="20,38,20,0" >
+
+                <!--#region P2 Digital Display Title -->
+                <Grid VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <TextBlock FontFamily="SemiBold" FontSize="22" FontWeight="Bold" Foreground="White" Padding="0,0,0,3.5"
+                       Text="P2 Digital Display"/>
+                    <Border CornerRadius="3" Background="#FFCD00" Height="1" VerticalAlignment="Bottom">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#EADF8C" ShadowDepth="3" BlurRadius="5" Opacity="0.8" Direction="-90"/>
+                        </Border.Effect>
+                    </Border>
+                </Grid>
+                <!-- Output Wattage Grid -->
+                <Grid x:Name="Output_Wattage_Grid" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,86,0,0">
+                    <Grid HorizontalAlignment="Center" Background="#0c0c0c" Width="260" Height="260">
+                        <TextBlock Text="Output Wattage"
+                            HorizontalAlignment="Center"
+                            FontSize="16"
+                            FontFamily="Poppins"
+                            FontWeight="DemiBold"
+                            Foreground="#c5bcbc"
+                            Margin="0,10,0,0"/>
+                        <!-- Background Circle -->
+                        <Canvas x:Name="Wattagecanvas" Width="260" Height="260" Margin="0,20,0,0">
+                            <Path x:Name="WattagebottomArc" StrokeThickness="10">
+                                <Path.Stroke>
+                                    <Binding Path="BottomColor" />
+                                </Path.Stroke>
+                            </Path>
+                            <Path x:Name="WattagetopArc" StrokeThickness="10">
+                                <Path.Stroke>
+                                    <Binding Path="TopColor" />
+                                </Path.Stroke>
+                            </Path>
+                            <!-- {Binding WattageUI, StringFormat='{}{0}'} -->
+                            <TextBlock x:Name="WattageprogressText"
+                                FontSize="30"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"                                
+                                Text="{Binding WattageUI, StringFormat='{}{0}'}"                                     
+                                Foreground="#eadf8c">                                
+                            </TextBlock>
+                        </Canvas>
+                        <TextBlock Text="W"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontFamily="Poppins"
+                            FontSize="20"                           
+                            Foreground="#FFFFFF"
+                            Margin="20,95,20,0"/>
+                        <Image Source="/Img/P2/Wattage.png" Width="36" Height="36" 
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Center"
+                            Margin="0,180,0,0" />
+                    </Grid>
+                </Grid>
+                <!-- PSU Fan Speed Grid -->
+                <Grid x:Name="Fan_Speed_Grid" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,50,0,0">
+                    <Grid HorizontalAlignment="Center" Background="#0c0c0c"  Width="260" Height="260">
+                        <TextBlock Text="PSU Fan Speed"
+                           HorizontalAlignment="Center"
+                           FontSize="16"
+                           FontFamily="Poppins"
+                           FontWeight="DemiBold"
+                           Foreground="#c5bcbc"
+                           Margin="0,10,0,0"/>
+                        <!-- Background Circle -->
+                        <Canvas x:Name="FanSpeedcanvas" Width="260" Height="260" Margin="0,20,0,0">
+                            <Path x:Name="FanSpeedbottomArc" StrokeThickness="10">
+                                <Path.Stroke>
+                                    <Binding Path="BottomColor" />
+                                </Path.Stroke>
+                            </Path>
+                            <Path x:Name="FanSpeedtopArc" StrokeThickness="10">
+                                <Path.Stroke>
+                                    <Binding Path="TopColor" />
+                                </Path.Stroke>
+                            </Path>
+                            <TextBlock x:Name="FanSpeedprogressText"
+                                FontSize="30"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Text="{Binding FanSpeedUI, StringFormat='{}{0}'}"                                     
+                                Foreground="#eadf8c">                                
+                            </TextBlock>
+                        </Canvas>
+                        <TextBlock Text="RPM"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="20"                           
+                            Foreground="#FFFFFF"
+                            Margin="20,95,20,0"
+                            FontFamily="Poppins" />
+                        <Image Source="/Img/P2/Fan_Speed.png" Width="30" Height="30"
+                            VerticalAlignment="Bottom" 
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,20" />
+                    </Grid>
+                </Grid>
+                <!-- #region Output Wattage End -->
+
+                <!--#region Current Usage Part -->
+                <Grid x:Name="Current_Usag_Grid" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,20,0">                
+                    <Grid x:Name="Current_Usage" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,86,0,0"                    
+                        Background="#0c0c0c" Height="530">
+                        <TextBlock Text="Current Usage"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           FontSize="16"
+                           FontFamily="Poppins"
+                           FontWeight="DemiBold"
+                           Foreground="#c5bcbc"
+                           Margin="0,10,0,0"/>
+                        <StackPanel x:Name="Usage_StackPanel" Orientation="Horizontal">
+                            <!-- 12V -->
+                            <Grid x:Name="Voltage12vGauge" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,45,10,0" Width="260">
+                                <!-- Background Circle -->
+                                <lvc:AngularGauge Value="{Binding Voltage12V}" FromValue="11.5" ToValue="13.5" 
+                                      LabelsStep="0.1" TicksStep="0.01" Wedge="180"
+                                      TicksForeground="Transparent" Foreground="Transparent"                                      
+                                      FontSize="12"
+                                      SectionsInnerRadius=".9"
+                                      NeedleFill="#eadf8c"                                      
+                                      >
+                                    <lvc:AngularGauge.Sections>
+                                        <lvc:AngularSection FromValue="11.5" ToValue="12.02" Fill="#FFF"/>
+                                        <lvc:AngularSection FromValue="12.06" ToValue="12.96" Fill="#22B14C"/>
+                                        <lvc:AngularSection FromValue="13.0" ToValue="13.5" Fill="#FF3939"/>
+                                    </lvc:AngularGauge.Sections>
+                                </lvc:AngularGauge>
+                                <TextBlock Text="Low" Foreground="#FFF"  FontSize="18" FontFamily="Poppins" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,80,10,30"/>
+                                <TextBlock Text="High" Foreground="#FFF"  FontSize="18" FontFamily="Poppins" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,80,0,30"/>
+                                <!-- TextBlock to display voltage  -->
+                                <TextBlock Text="{Binding Voltage12V, StringFormat='{}{0} '}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"                           
+                                    Foreground="#eadf8c"
+                                    Margin="0,100,120,0"/>
+                                <TextBlock Text="V"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Poppins"
+                                    FontSize="20"                           
+                                    Foreground="#FFFFFF"
+                                    Margin="0,105,50,0"/>
+                                <Image Source="/Img/P2/12V.png" Width="36" Height="36"
+                                    VerticalAlignment="Center" 
+                                    HorizontalAlignment="Center"
+                                    Margin="0,180,0,0" />
+                                <!-- Ampere text display  -->
+                                <TextBlock Text="{Binding Crueent_12V, StringFormat='{}{0}'}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"                           
+                                    Foreground="#eadf8c"
+                                    Margin="80,105,0,0"/>
+                                <TextBlock Text="A"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"   
+                                    FontFamily="Poppins"
+                                    Foreground="#FFFFFF"
+                                    Margin="135,105,0,0"/>
+                            </Grid>
+                            <!-- 5V -->
+                            <Grid x:Name="Voltage5vGauge" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,45,10,0" Width="260">
+                                <!-- Background Circle -->
+                                <lvc:AngularGauge Value="{Binding Voltage5V}" FromValue="4.5" ToValue="5.5" 
+                                      LabelsStep="0.1" TicksStep="0.01" Wedge="180"
+                                      TicksForeground="Transparent" Foreground="Transparent"                                      
+                                      FontSize="12"
+                                      SectionsInnerRadius=".9"
+                                      NeedleFill="#eadf8c"                                     
+                                      >
+                                    <lvc:AngularGauge.Sections>
+                                        <lvc:AngularSection FromValue="4.5" ToValue="4.75" Fill="#FFF"/>
+                                        <lvc:AngularSection FromValue="4.77" ToValue="5.20" Fill="#22B14C"/>
+                                        <lvc:AngularSection FromValue="5.22" ToValue="5.5" Fill="#FF3939"/>
+                                    </lvc:AngularGauge.Sections>
+                                </lvc:AngularGauge>
+                                <TextBlock Text="Low" Foreground="#FFF"  FontSize="18" FontFamily="Poppins" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,80,10,30"/>
+                                <TextBlock Text="High" Foreground="#FFF"  FontSize="18" FontFamily="Poppins" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,80,0,30"/>
+                                <!-- TextBlock to display voltage -->
+                                <TextBlock Text="{Binding Voltage5V, StringFormat='{}{0:F2} '}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="20"                                   
+                                   Foreground="#eadf8c"
+                                   Margin="0,100,120,0"/>
+                                <TextBlock Text="V"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"  
+                                    FontFamily="Poppins"
+                                    Foreground="#FFFFFF"
+                                    Margin="0,105,50,0"/>
+                                <!-- Ampere text display -->
+                                <TextBlock Text="{Binding Crueent_5V, StringFormat='{}{0} '}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"                           
+                                    Foreground="#eadf8c"
+                                    Margin="90,105,0,0"/>
+                                <TextBlock Text="A"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"
+                                    FontFamily="Poppins"
+                                    Foreground="#FFFFFF"
+                                    Margin="160,105,0,0"/>
+                                <Image Source="/Img/P2/5V.png" Width="36" Height="36"
+                                        VerticalAlignment="Center" 
+                                        HorizontalAlignment="Center"
+                                        Margin="0,180,0,0" />
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel x:Name="Usage_StackPanel2" Orientation="Vertical">
+                            <!-- 3.3V -->
+                            <Grid x:Name="Voltage3V3Gauge" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10,300,10,0"  Width="240" Height="260">
+                                <!-- Background Circle -->
+                                <lvc:AngularGauge Value="{Binding Voltage3V3}" FromValue="3.25" ToValue="3.4" 
+                                      LabelsStep="0.1" TicksStep="0.01" Wedge="180"
+                                      TicksForeground="Transparent" Foreground="Transparent"                                      
+                                      FontSize="12"
+                                      SectionsInnerRadius=".9"
+                                      NeedleFill="#eadf8c"                                      
+                                      >
+                                    <lvc:AngularGauge.Sections>
+                                        <lvc:AngularSection FromValue="3.25" ToValue=" 3.289" Fill="#FFF"/>
+                                        <lvc:AngularSection FromValue="3.292" ToValue="3.355" Fill="#22B14C"/>
+                                        <lvc:AngularSection FromValue="3.358" ToValue="3.4" Fill="#FF3939"/>
+                                    </lvc:AngularGauge.Sections>
+                                </lvc:AngularGauge>
+                                <TextBlock Text="Low" Foreground="#FFF"  FontSize="18" FontFamily="Poppins" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,80,10,30"/>
+                                <TextBlock Text="High" Foreground="#FFF"  FontSize="18" FontFamily="Poppins" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,80,0,30"/>
+                                <Image Source="/Img/P2/3.3V.png" Width="36" Height="36"
+                                    VerticalAlignment="Center" 
+                                    HorizontalAlignment="Center"
+                                    Margin="7,170,0,7" />
+                                <!-- TextBlock to display voltage  -->
+                                <TextBlock Text="{Binding Voltage3V3, StringFormat='{}{0:F3} '}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="20"                                   
+                                   Foreground="#eadf8c"
+                                   Margin="0,100,120,0"/>
+                                <TextBlock Text="V"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"
+                                    FontFamily="Poppins"
+                                    Foreground="#FFFFFF"
+                                    Margin="0,105,60,0"/>
+                                <!-- Ampere text display  -->
+                                <TextBlock Text="{Binding Crueent_3V, StringFormat='{}{0} '}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"                           
+                                    Foreground="#eadf8c"
+                                    Margin="120,105,0,0"/>
+                                <TextBlock Text="A"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"                           
+                                    Foreground="#FFFFFF"
+                                    Margin="185,105,0,0"/>
+                            </Grid>
+                            
+
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <!--#region Current Usage End -->
+                <!-- PSU Temperature Grid -->
+                <Grid x:Name="PSU_Temperature_Grid" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,86,20,0">
+                    <Grid Margin="0" HorizontalAlignment="Center" Width="260" Height="260" Background="#0c0c0c">
+                        <TextBlock Text="PSU Temperature"
+                           HorizontalAlignment="Center"
+                           FontSize="16"
+                           FontFamily="Poppins"
+                           FontWeight="DemiBold"
+                           Foreground="#c5bcbc"
+                           Margin="0,10,0,0"/>
+                        <!-- Background Circle -->
+                        <!-- Add 24/05/29 -->
+                        <Canvas x:Name="Tempcanvas" Width="260" Height="260" Margin="0,20,0,0">
+                            <Path x:Name="TempbottomArc" StrokeThickness="10">
+                                <Path.Stroke>
+                                    <Binding Path="BottomColor" />
+                                </Path.Stroke>
+                            </Path>
+                            <Path x:Name="TemptopArc" StrokeThickness="10">
+                                <Path.Stroke>
+                                    <Binding Path="TopColor" />
+                                </Path.Stroke>
+                            </Path>
+                            <TextBlock x:Name="TempprogressText"
+                                FontSize="30"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Text="{Binding PowerTempUI, StringFormat='{}{0}'}"                                     
+                                Foreground="#eadf8c">                                  
+                            </TextBlock>
+                        </Canvas>
+                        <TextBlock Text="°C"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="20"     
+                            FontFamily="Poppins"
+                            Foreground="#FFFFFF"
+                            Margin="65,50,0,0"/>
+                        <Image Source="/Img/P2/Temperature.png" Width="36" Height="36"
+                            VerticalAlignment="Bottom" 
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,20" />
+                    </Grid>
+                </Grid>
+                <!-- Power Temperature Grid End -->
+                <!-- Power_Efficiency Grid -->
+                <Grid x:Name="Power_Efficiency_Grid" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,50,20,0" >
+                    <Grid Margin="0" HorizontalAlignment="Center" Width="260" Height="260" Background="#0c0c0c">
+                        <TextBlock Text="Power Efficiency"
+                           HorizontalAlignment="Center"
+                           FontSize="16"
+                           FontFamily="Poppins"
+                           FontWeight="DemiBold"
+                           Foreground="#c5bcbc"
+                           Margin="0,10,0,0"/>
+                        <!-- Background Circle -->
+                        <Canvas x:Name="canvas" Width="260" Height="260" Margin="0,20,0,0">
+                            <Path x:Name="bottomArc" StrokeThickness="10">
+                                <Path.Stroke>
+                                    <Binding Path="BottomColor" />
+                                </Path.Stroke>
+                            </Path>
+                            <Path x:Name="topArc" StrokeThickness="10">
+                                <Path.Stroke>
+                                    <Binding Path="TopColor" />
+                                </Path.Stroke>
+                            </Path>
+                            <TextBlock x:Name="progressText"
+                                FontSize="30"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Text="{Binding Efficiency, StringFormat='{}{0}'}"
+                                Foreground="#eadf8c">                                
+                            </TextBlock>
+                        </Canvas>                        
+                        <TextBlock Text="%"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="20"  
+                            FontFamily="Poppins"
+                            Foreground="#FFFFFF"
+                            Margin="65,45,0,0"/>
+                        <Image Source="/Img/P2/PowerEfficiency.png" Width="36" Height="36"
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Center"
+                            Margin="0,180,0,0" />
+                    </Grid>
+                </Grid>                
+                <!-- #region Power_Efficiency End -->
+            </Grid>
+        </Grid>
+    </Viewbox>
+</UserControl>
